@@ -7,6 +7,7 @@ import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
@@ -14,12 +15,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Steve Todorov
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class PingControllerTest
         extends MavenRestAssuredBaseTest
 {
@@ -36,7 +39,6 @@ public class PingControllerTest
     @Test
     public void testShouldReturnPongText()
     {
-
         given().header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE)
                .when()
                .get(getContextBaseUrl())
@@ -109,4 +111,5 @@ public class PingControllerTest
                .statusCode(HttpStatus.UNAUTHORIZED.value())
                .body(notNullValue());
     }
+
 }
