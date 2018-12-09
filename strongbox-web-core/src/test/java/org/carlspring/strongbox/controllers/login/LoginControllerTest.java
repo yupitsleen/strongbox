@@ -12,16 +12,19 @@ import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Przemyslaw Fusik
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class LoginControllerTest
         extends RestAssuredBaseTest
 {
@@ -39,7 +42,6 @@ public class LoginControllerTest
 
     @Test
     public void shouldReturnGeneratedToken()
-            throws Exception
     {
         LoginInput loginInput = new LoginInput();
         loginInput.setUsername("admin");
@@ -61,7 +63,6 @@ public class LoginControllerTest
     @WithAnonymousUser
     @Test
     public void shouldReturnInvalidCredentialsError()
-            throws Exception
     {
         LoginInput loginInput = new LoginInput();
         loginInput.setUsername("przemyslaw_fusik");
@@ -82,7 +83,6 @@ public class LoginControllerTest
     @Test
     @WithAnonymousUser
     public void shouldReturnInvalidCredentialsWhenUserIsDisabled()
-        throws Exception
     {
         UserDto disabledUser = new UserDto();
         disabledUser.setUsername("test-disabled-user-login");
