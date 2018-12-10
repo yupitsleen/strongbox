@@ -29,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,6 +47,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Pablo Tirado
@@ -53,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
 @Transactional
+@Execution(CONCURRENT)
 public class UserControllerTestIT
         extends RestAssuredBaseTest
 {
@@ -759,7 +762,9 @@ public class UserControllerTestIT
 
         assertNotNull(repositoryAccess);
         assertTrue(repositoryAccess.isPresent());
+
         logger.info("$$$$$$$$$$$$$$$$$$$$$$$$$" + repositoryAccess.get().getPrivileges());
+
         assertTrue(repositoryAccess.get().getPrivileges().contains(mockPrivilege));
     }
 
@@ -826,6 +831,7 @@ public class UserControllerTestIT
         accessModel.addRepositoryAccess(form);
 
         String username = "userNotFound";
+
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
                .accept(MediaType.APPLICATION_JSON_VALUE)
                .body(accessModel)
@@ -924,6 +930,7 @@ public class UserControllerTestIT
             dto = new AccessModelForm();
             BeanUtils.copyProperties(accessModel, dto);
         }
+
         return dto;
     }
 
