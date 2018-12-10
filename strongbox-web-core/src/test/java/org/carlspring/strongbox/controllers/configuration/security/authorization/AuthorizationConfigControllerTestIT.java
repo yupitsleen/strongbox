@@ -20,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,12 +28,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.carlspring.strongbox.controllers.configuration.security.authorization.AuthorizationConfigController.*;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Pablo Tirado
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class AuthorizationConfigControllerTestIT
         extends RestAssuredBaseTest
 {
@@ -182,14 +185,16 @@ public class AuthorizationConfigControllerTestIT
     @Test
     public void testRoleShouldBeDeletedWithResponseInJson()
     {
-        String roleName = config.getRoles().iterator().next().getName();
+        testRoleShouldBeAddedWithResponseInJson();
+        String roleName = "TEST_ROLE";
         roleShouldBeDeleted(MediaType.APPLICATION_JSON_VALUE, roleName);
     }
 
     @Test
     public void testRoleShouldBeDeletedWithResponseInText()
     {
-        String roleName = config.getRoles().iterator().next().getName();
+        testRoleShouldBeAddedWithResponseInText();
+        String roleName = "TEST_ROLE";
         roleShouldBeDeleted(MediaType.TEXT_PLAIN_VALUE, roleName);
     }
 

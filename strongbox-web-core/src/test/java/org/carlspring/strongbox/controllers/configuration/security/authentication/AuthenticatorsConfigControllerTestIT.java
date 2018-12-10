@@ -20,7 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.http.HttpHeaders;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -31,6 +31,7 @@ import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.carlspring.strongbox.CustomMatchers.equalByToString;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Przemyslaw Fusik
@@ -38,6 +39,7 @@ import static org.hamcrest.CoreMatchers.is;
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class AuthenticatorsConfigControllerTestIT
         extends RestAssuredBaseTest
 {
@@ -109,7 +111,7 @@ public class AuthenticatorsConfigControllerTestIT
 
         // Reorder elements
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-               .header(HttpHeaders.ACCEPT, acceptHeader)
+               .accept(acceptHeader)
                .when()
                .put(getContextBaseUrl() + "/authenticators/reorder/0/1")
                .peek()
@@ -136,7 +138,7 @@ public class AuthenticatorsConfigControllerTestIT
 
         // Reload registry
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-               .header(HttpHeaders.ACCEPT, acceptHeader)
+               .accept(acceptHeader)
                .when()
                .put(getContextBaseUrl() + "/authenticators/reload")
                .peek()
@@ -182,7 +184,7 @@ public class AuthenticatorsConfigControllerTestIT
     {
         // when
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
-               .header(HttpHeaders.ACCEPT, acceptHeader)
+               .accept(acceptHeader)
                .when()
                .put(getContextBaseUrl() + "/authenticators/reorder/0/1")
                .peek()

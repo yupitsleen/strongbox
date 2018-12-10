@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Przemyslaw Fusik
@@ -38,6 +40,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class LdapAuthenticatorConfigurationControllerTest
         extends RestAssuredBaseTest
 {
@@ -50,6 +53,8 @@ public class LdapAuthenticatorConfigurationControllerTest
             throws Exception
     {
         super.init();
+        setContextBaseUrl("/api/configuration/ldap");
+        scanner.scanAndReloadRegistry();
     }
 
     private static LdapConfigurationTestForm validLdapConfigurationTestForm()
@@ -78,13 +83,6 @@ public class LdapAuthenticatorConfigurationControllerTest
         form.setPassword("password");
 
         return form;
-    }
-
-    @BeforeEach
-    public void setUp()
-    {
-        setContextBaseUrl("/api/configuration/ldap");
-        scanner.scanAndReloadRegistry();
     }
 
     @WithMockUser(authorities = "ADMIN")
