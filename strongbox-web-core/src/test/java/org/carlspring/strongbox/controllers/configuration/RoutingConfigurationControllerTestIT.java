@@ -13,18 +13,21 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.carlspring.strongbox.controllers.configuration.RoutingConfigurationController.*;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Pablo Tirado
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class RoutingConfigurationControllerTestIT
         extends RestAssuredBaseTest
 {
@@ -40,35 +43,30 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void addAcceptedRuleSetWithTextAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
     }
 
     @Test
     public void addAcceptedRuleSetWithJsonAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Test
     public void shouldNotAddAcceptedRuleSetWithTextAcceptHeader()
-            throws Exception
     {
         shouldNotAddAcceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
     }
 
     @Test
     public void shouldNotAddAcceptedRuleSetWithJsonAcceptHeader()
-            throws Exception
     {
         shouldNotAddAcceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Test
     public void removeAcceptedRuleSetWithTextAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
         removeAcceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
@@ -76,7 +74,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void removeAcceptedRuleSetWithJsonAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
         removeAcceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
@@ -84,7 +81,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void addAcceptedRepositoryWithTextAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
         acceptedRepository(MediaType.TEXT_PLAIN_VALUE);
@@ -92,7 +88,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void addAcceptedRepositoryWithJsonAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
         acceptedRepository(MediaType.APPLICATION_JSON_VALUE);
@@ -100,7 +95,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void shouldNotAddAcceptedRepositoryWithTextAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
         shouldNotAddAcceptedRepository(MediaType.TEXT_PLAIN_VALUE);
@@ -108,7 +102,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void shouldNotAddAcceptedRepositoryWithJsonAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
         shouldNotAddAcceptedRepository(MediaType.APPLICATION_JSON_VALUE);
@@ -116,7 +109,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void removeAcceptedRepositoryWithTextAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
         acceptedRepository(MediaType.TEXT_PLAIN_VALUE);
@@ -125,7 +117,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void removeAcceptedRepositoryWithJsonAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
         acceptedRepository(MediaType.APPLICATION_JSON_VALUE);
@@ -134,7 +125,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void overrideAcceptedRepositoryWithTextAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
         acceptedRepository(MediaType.TEXT_PLAIN_VALUE);
@@ -143,7 +133,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void overrideAcceptedRepositoryWithJsonAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
         acceptedRepository(MediaType.APPLICATION_JSON_VALUE);
@@ -152,7 +141,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void shouldNotOverrideAcceptedRepositoryWithTextAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.TEXT_PLAIN_VALUE);
         acceptedRepository(MediaType.TEXT_PLAIN_VALUE);
@@ -161,7 +149,6 @@ public class RoutingConfigurationControllerTestIT
 
     @Test
     public void shouldNotOverrideAcceptedRepositoryWithJsonAcceptHeader()
-            throws Exception
     {
         acceptedRuleSet(MediaType.APPLICATION_JSON_VALUE);
         acceptedRepository(MediaType.APPLICATION_JSON_VALUE);
@@ -222,7 +209,6 @@ public class RoutingConfigurationControllerTestIT
 
     private void removeAcceptedRuleSet(String acceptHeader)
     {
-
         String url = getContextBaseUrl() + "/rules/set/accepted/group-releases-2";
 
         given().contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -290,8 +276,7 @@ public class RoutingConfigurationControllerTestIT
 
     private void overrideAcceptedRepository(String acceptHeader)
     {
-        String url = getContextBaseUrl() + "/rules/accepted" +
-                     "/group-releases-2/override/repositories";
+        String url = getContextBaseUrl() + "/rules/accepted/group-releases-2/override/repositories";
 
         RoutingRuleForm routingRule = new RoutingRuleForm();
         routingRule.setPattern(".*some.test");
@@ -312,8 +297,7 @@ public class RoutingConfigurationControllerTestIT
 
     private void shouldNotOverrideAcceptedRepository(String acceptHeader)
     {
-        String url = getContextBaseUrl() + "/rules/accepted" +
-                     "/group-releases-2/override/repositories";
+        String url = getContextBaseUrl() + "/rules/accepted/group-releases-2/override/repositories";
 
         RoutingRuleForm routingRule = new RoutingRuleForm();
         routingRule.setPattern("");
@@ -329,4 +313,5 @@ public class RoutingConfigurationControllerTestIT
                .statusCode(HttpStatus.BAD_REQUEST.value())
                .body(containsString(FAILED_OVERRIDE_REPOSITORY_FORM_ERROR));
     }
+
 }
