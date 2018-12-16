@@ -17,6 +17,7 @@ import org.apache.http.pool.PoolStats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,12 +25,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Pablo Tirado
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class HttpConnectionPoolConfigurationManagementControllerTestIT
         extends RestAssuredBaseTest
 {
@@ -37,14 +40,18 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
     @Inject
     private ConfigurationManager configurationManager;
 
+
     @Override
     @BeforeEach
     public void init()
             throws Exception
     {
         super.init();
-        Path storageBasedir = Paths.get(ConfigurationResourceResolver.getVaultDirectory(), "storages", "storage0",
-                                        "org", "carlspring", "strongbox", "strongbox-utils", "8.2",
+
+        Path storageBasedir = Paths.get(ConfigurationResourceResolver.getVaultDirectory(),
+                                        "storages", "storage0",
+                                        "org", "carlspring", "strongbox", "strongbox-utils",
+                                        "8.2",
                                         "strongbox-utils-8.2.jar");
 
         generateArtifact(storageBasedir.toAbsolutePath().toString());
@@ -134,8 +141,8 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
     {
         int newDefaultNumberOfConnections = 5;
 
-        String url =
-                getContextBaseUrl() + "/api/configuration/proxy/connection-pool/default/" + newDefaultNumberOfConnections;
+        String url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/default/" +
+                     newDefaultNumberOfConnections;
 
         given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                .when()
@@ -246,4 +253,6 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
                .statusCode(HttpStatus.OK.value())
                .body("max", equalTo(expectedPoolStats.getMax()));
     }
+
 }
+
