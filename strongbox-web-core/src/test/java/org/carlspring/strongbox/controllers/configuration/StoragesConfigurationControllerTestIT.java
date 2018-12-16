@@ -20,17 +20,20 @@ import org.apache.http.pool.PoolStats;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.HttpServerErrorException;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Pablo Tirado
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class StoragesConfigurationControllerTestIT
         extends RestAssuredBaseTest
 {
@@ -64,7 +67,6 @@ public class StoragesConfigurationControllerTestIT
 
     @Test
     public void testGetStorages()
-            throws Exception
     {
         String url = getContextBaseUrl() + "/api/configuration/strongbox/storages";
 
@@ -78,7 +80,6 @@ public class StoragesConfigurationControllerTestIT
 
     @Test
     public void testGetStorage()
-            throws Exception
     {
         String url = getContextBaseUrl() + "/api/configuration/strongbox/storages/storage0";
 
@@ -92,7 +93,6 @@ public class StoragesConfigurationControllerTestIT
 
     @Test
     public void testGetGroupRepository()
-            throws Exception
     {
         String url = getContextBaseUrl() +
                      "/api/configuration/strongbox/storages/storage-common-proxies/group-common-proxies";
@@ -107,7 +107,6 @@ public class StoragesConfigurationControllerTestIT
 
     @Test
     public void testGetMavenRepository()
-            throws Exception
     {
         String url = getContextBaseUrl() +
                      "/api/configuration/strongbox/storages/storage0/releases";
@@ -289,12 +288,11 @@ public class StoragesConfigurationControllerTestIT
                         (aClass, s) -> objectMapper
                 ));
 
-        return givenCustom()
-                       .accept(MediaType.APPLICATION_JSON_VALUE)
-                       .when()
-                       .get(url)
-                       .prettyPeek()
-                       .as(Storage.class);
+        return givenCustom().accept(MediaType.APPLICATION_JSON_VALUE)
+                            .when()
+                            .get(url)
+                            .prettyPeek()
+                            .as(Storage.class);
     }
 
     private int addRepository(RepositoryForm repository,
@@ -446,4 +444,5 @@ public class StoragesConfigurationControllerTestIT
 
         deleteRepository(storageId, repositoryId2);
     }
+
 }
