@@ -14,22 +14,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Pablo Tirado
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class StrongboxConfigurationControllerTestIT
         extends RestAssuredBaseTest
 {
 
     @Inject
     private ObjectMapper objectMapper;
+
 
     @Override
     @BeforeEach
@@ -40,7 +44,8 @@ public class StrongboxConfigurationControllerTestIT
     }
     
     @Test
-    public void testGetAndSetConfiguration() throws JsonParseException, JsonMappingException, IOException
+    public void testGetAndSetConfiguration()
+            throws IOException
     {
         MutableConfiguration configuration = getConfigurationFromRemote();
 
@@ -63,7 +68,8 @@ public class StrongboxConfigurationControllerTestIT
         assertNotNull(c.getStorage("storage3"), "Failed to create storage3!");
     }
 
-    public MutableConfiguration getConfigurationFromRemote() throws JsonParseException, JsonMappingException, IOException
+    public MutableConfiguration getConfigurationFromRemote()
+            throws IOException
     {
         String url = getContextBaseUrl() + "/api/configuration/strongbox";
 
