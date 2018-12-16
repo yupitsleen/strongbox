@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -19,12 +20,14 @@ import static org.carlspring.strongbox.controllers.configuration.ProxyConfigurat
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Pablo Tirado
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class ProxyConfigurationControllerTestIT
         extends RestAssuredBaseTest
 {
@@ -135,7 +138,6 @@ public class ProxyConfigurationControllerTestIT
                .then()
                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                .body(containsString(FAILED_UPDATE));
-
     }
 
     @WithMockUser(authorities = "CONFIGURATION_SET_GLOBAL_PROXY_CFG")
@@ -166,7 +168,6 @@ public class ProxyConfigurationControllerTestIT
                .then()
                .statusCode(HttpStatus.BAD_REQUEST.value())
                .body(containsString(FAILED_UPDATE_FORM_ERROR));
-
     }
 
     @WithMockUser(authorities = "CONFIGURATION_SET_GLOBAL_PROXY_CFG")
@@ -182,4 +183,5 @@ public class ProxyConfigurationControllerTestIT
     {
         testSetGlobalProxyConfigurationBadRequest(MediaType.APPLICATION_JSON_VALUE);
     }
+
 }
