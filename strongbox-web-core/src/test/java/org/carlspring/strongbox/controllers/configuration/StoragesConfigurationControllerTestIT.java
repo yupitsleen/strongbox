@@ -47,6 +47,7 @@ public class StoragesConfigurationControllerTestIT
             throws Exception
     {
         super.init();
+        setContextBaseUrl("/api/configuration/strongbox/storages");
     }
 
     static ProxyConfigurationForm createProxyConfiguration()
@@ -68,55 +69,53 @@ public class StoragesConfigurationControllerTestIT
     @Test
     public void testGetStorages()
     {
-        String url = getContextBaseUrl() + "/api/configuration/strongbox/storages";
+        String url = getContextBaseUrl();
 
         givenCustom().accept(MediaType.APPLICATION_JSON_VALUE)
                      .when()
                      .get(url)
                      .peek()
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     public void testGetStorage()
     {
-        String url = getContextBaseUrl() + "/api/configuration/strongbox/storages/storage0";
+        String url = getContextBaseUrl() + "/" + STORAGE0;
 
         givenCustom().accept(MediaType.APPLICATION_JSON_VALUE)
                      .when()
                      .get(url)
                      .peek()
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     public void testGetGroupRepository()
     {
-        String url = getContextBaseUrl() +
-                     "/api/configuration/strongbox/storages/storage-common-proxies/group-common-proxies";
+        String url = getContextBaseUrl() + "/storage-common-proxies/group-common-proxies";
 
         givenCustom().accept(MediaType.APPLICATION_JSON_VALUE)
                      .when()
                      .get(url)
                      .peek()
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
     }
 
     @Test
     public void testGetMavenRepository()
     {
-        String url = getContextBaseUrl() +
-                     "/api/configuration/strongbox/storages/storage0/releases";
+        String url = getContextBaseUrl() + "/" + STORAGE0 + "/releases";
 
         givenCustom().accept(MediaType.APPLICATION_JSON_VALUE)
                      .when()
                      .get(url)
                      .peek()
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -127,7 +126,7 @@ public class StoragesConfigurationControllerTestIT
         StorageForm storage1 = new StorageForm();
         storage1.setId("storage1");
 
-        String url = getContextBaseUrl() + "/api/configuration/strongbox/storages";
+        String url = getContextBaseUrl();
 
         logger.debug("Using storage class " + storage1.getClass()
                                                       .getName());
@@ -139,7 +138,7 @@ public class StoragesConfigurationControllerTestIT
                      .put(url)
                      .prettyPeek()
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
 
         RepositoryForm r1 = new RepositoryForm();
         r1.setId("repository0");
@@ -196,7 +195,7 @@ public class StoragesConfigurationControllerTestIT
     public void testAddGetRepository()
     {
         StorageForm storage0 = new StorageForm();
-        String storageId = "storage0";
+        String storageId = STORAGE0;
         storage0.setId(storageId);
 
         RepositoryForm r0_1 = new RepositoryForm();
@@ -281,7 +280,7 @@ public class StoragesConfigurationControllerTestIT
 
     private Storage getStorage(String storageId)
     {
-        String url = getContextBaseUrl() + "/api/configuration/strongbox/storages/" + storageId;
+        String url = getContextBaseUrl() + "/" + storageId;
 
         RestAssuredMockMvcConfig config = RestAssuredMockMvcConfig.config().objectMapperConfig(
                 new ObjectMapperConfig().jackson2ObjectMapperFactory(
@@ -317,7 +316,7 @@ public class StoragesConfigurationControllerTestIT
 
         try
         {
-            url = getContextBaseUrl() + "/api/configuration/strongbox/storages/" + storage.getId() +
+            url = getContextBaseUrl() + "/" + storage.getId() +
                   "/" +
                   repository.getId();
         }
@@ -334,7 +333,7 @@ public class StoragesConfigurationControllerTestIT
                                   .when()
                                   .put(url)
                                   .then()
-                                  .statusCode(200)
+                                  .statusCode(HttpStatus.OK.value())
                                   .extract()
                                   .statusCode();
 
@@ -344,16 +343,14 @@ public class StoragesConfigurationControllerTestIT
     private void deleteRepository(String storageId,
                                   String repositoryId)
     {
-        String url = getContextBaseUrl() + String.format("/api/configuration/strongbox/storages/%s/%s",
-                                                         storageId,
-                                                         repositoryId);
+        String url = getContextBaseUrl() + String.format("/%s/%s", storageId, repositoryId);
 
         givenCustom().contentType(MediaType.APPLICATION_JSON_VALUE)
                      .accept(MediaType.APPLICATION_JSON_VALUE)
                      .when()
                      .delete(url)
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
     }
 
     @Test
@@ -366,7 +363,7 @@ public class StoragesConfigurationControllerTestIT
         StorageForm storage2 = new StorageForm();
         storage2.setId(storageId);
 
-        String url = getContextBaseUrl() + "/api/configuration/strongbox/storages";
+        String url = getContextBaseUrl();
 
         givenCustom().contentType(MediaType.APPLICATION_JSON_VALUE)
                      .accept(MediaType.APPLICATION_JSON_VALUE)
@@ -375,7 +372,7 @@ public class StoragesConfigurationControllerTestIT
                      .put(url)
                      .peek() // Use peek() to print the ouput
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
 
         RepositoryForm r1 = new RepositoryForm();
         r1.setId(repositoryId1);
@@ -409,7 +406,7 @@ public class StoragesConfigurationControllerTestIT
                      .get(url)
                      .peek() // Use peek() to print the ouput
                      .then()
-                     .statusCode(200)
+                     .statusCode(HttpStatus.OK.value())
                      .extract();
 
         Storage storage = getStorage(storageId);
@@ -417,7 +414,7 @@ public class StoragesConfigurationControllerTestIT
         assertNotNull(storage, "Failed to get storage (" + storageId + ")!");
         assertFalse(storage.getRepositories().isEmpty(), "Failed to get storage (" + storageId + ")!");
 
-        url = getContextBaseUrl() + "/api/configuration/strongbox/storages/" + storageId + "/" + repositoryId1;
+        url = getContextBaseUrl() + "/" + storageId + "/" + repositoryId1;
 
         logger.debug(url);
 
@@ -428,9 +425,9 @@ public class StoragesConfigurationControllerTestIT
                      .delete(url)
                      .peek() // Use peek() to print the ouput
                      .then()
-                     .statusCode(200);
+                     .statusCode(HttpStatus.OK.value());
 
-        url = getContextBaseUrl() + "/api/configuration/strongbox/storages/" + storageId + "/" + repositoryId1;
+        url = getContextBaseUrl() + "/" + storageId + "/" + repositoryId1;
 
         logger.debug(storageId);
         logger.debug(repositoryId1);
@@ -440,7 +437,7 @@ public class StoragesConfigurationControllerTestIT
                      .get(url)
                      .peek() // Use peek() to print the ouput
                      .then()
-                     .statusCode(404);
+                     .statusCode(HttpStatus.NOT_FOUND.value());
 
         deleteRepository(storageId, repositoryId2);
     }
