@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -48,11 +47,14 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
     {
         super.init();
 
+        setContextBaseUrl("/api/configuration/proxy/connection-pool");
+
         Path storageBasedir = Paths.get(ConfigurationResourceResolver.getVaultDirectory(),
                                         "storages", "storage0",
                                         "org", "carlspring", "strongbox", "strongbox-utils",
                                         "8.2",
                                         "strongbox-utils-8.2.jar");
+
 
         generateArtifact(storageBasedir.toAbsolutePath().toString());
     }
@@ -62,9 +64,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
     {
         int newMaxNumberOfConnections = 200;
 
-        String url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/max/" + newMaxNumberOfConnections;
+        String url = getContextBaseUrl() + "/max/" + newMaxNumberOfConnections;
 
-        given().header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE)
+        given().accept(MediaType.TEXT_PLAIN_VALUE)
                .when()
                .put(url)
                .peek()
@@ -72,9 +74,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
                .statusCode(HttpStatus.OK.value())
                .body(equalTo("Max number of connections for proxy repository was updated successfully."));
 
-        url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool";
+        url = getContextBaseUrl();
 
-        given().header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE)
+        given().accept(MediaType.TEXT_PLAIN_VALUE)
                .when()
                .get(url)
                .peek()
@@ -88,9 +90,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
     {
         int newMaxNumberOfConnections = 200;
 
-        String url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/max/" + newMaxNumberOfConnections;
+        String url = getContextBaseUrl() + "/max/" + newMaxNumberOfConnections;
 
-        given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+        given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .put(url)
                .peek()
@@ -98,9 +100,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
                .statusCode(HttpStatus.OK.value())
                .body("message", equalTo("Max number of connections for proxy repository was updated successfully."));
 
-        url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool";
+        url = getContextBaseUrl();
 
-        given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+        given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .get(url)
                .peek()
@@ -115,9 +117,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
         int newDefaultNumberOfConnections = 5;
 
         String url =
-                getContextBaseUrl() + "/api/configuration/proxy/connection-pool/default/" + newDefaultNumberOfConnections;
+                getContextBaseUrl() + "/default/" + newDefaultNumberOfConnections;
 
-        given().header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE)
+        given().accept(MediaType.TEXT_PLAIN_VALUE)
                .when()
                .put(url)
                .peek()
@@ -125,9 +127,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
                .statusCode(HttpStatus.OK.value())
                .body(equalTo("Default number of connections for proxy repository was updated successfully."));
 
-        url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/default-number";
+        url = getContextBaseUrl() + "/default-number";
 
-        given().header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE)
+        given().accept(MediaType.TEXT_PLAIN_VALUE)
                .when()
                .get(url)
                .peek()
@@ -141,10 +143,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
     {
         int newDefaultNumberOfConnections = 5;
 
-        String url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/default/" +
-                     newDefaultNumberOfConnections;
+        String url = getContextBaseUrl() + "/default/" + newDefaultNumberOfConnections;
 
-        given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+        given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .put(url)
                .peek()
@@ -153,9 +154,9 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
                .body("message",
                      equalTo("Default number of connections for proxy repository was updated successfully."));
 
-        url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/default-number";
+        url = getContextBaseUrl() + "/default-number";
 
-        given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+        given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .get(url)
                .peek()
@@ -182,12 +183,12 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
         Repository repository = repositoryOpt.get();
         int numberOfConnections = 5;
 
-        String url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/" +
+        String url = getContextBaseUrl() + "/" +
                      repository.getStorage().getId() + "/" +
                      repository.getId() + "/" +
                      numberOfConnections;
 
-        given().header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE)
+        given().accept(MediaType.TEXT_PLAIN_VALUE)
                .when()
                .put(url)
                .peek()
@@ -195,12 +196,12 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
                .statusCode(HttpStatus.OK.value())
                .body(equalTo("Number of pool connections for repository was updated successfully."));
 
-        url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/" +
+        url = getContextBaseUrl() + "/" +
               repository.getStorage().getId() + "/" +
               repository.getId();
 
         PoolStats expectedPoolStats = new PoolStats(0, 0, 0, numberOfConnections);
-        given().header(HttpHeaders.ACCEPT, MediaType.TEXT_PLAIN_VALUE)
+        given().accept(MediaType.TEXT_PLAIN_VALUE)
                .when()
                .get(url)
                .peek()
@@ -227,12 +228,12 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
         Repository repository = repositoryOpt.get();
         int numberOfConnections = 5;
 
-        String url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/" +
+        String url = getContextBaseUrl() + "/" +
                      repository.getStorage().getId() + "/" +
                      repository.getId() + "/" +
                      numberOfConnections;
 
-        given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+        given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .put(url)
                .peek()
@@ -240,12 +241,12 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
                .statusCode(HttpStatus.OK.value())
                .body("message", equalTo("Number of pool connections for repository was updated successfully."));
 
-        url = getContextBaseUrl() + "/api/configuration/proxy/connection-pool/" +
+        url = getContextBaseUrl() + "/" +
               repository.getStorage().getId() + "/" +
               repository.getId();
 
         PoolStats expectedPoolStats = new PoolStats(0, 0, 0, numberOfConnections);
-        given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+        given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .get(url)
                .peek()
@@ -255,4 +256,3 @@ public class HttpConnectionPoolConfigurationManagementControllerTestIT
     }
 
 }
-
