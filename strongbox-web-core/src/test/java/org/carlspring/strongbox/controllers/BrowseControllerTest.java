@@ -18,16 +18,19 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Guido Grazioli
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
+@Execution(CONCURRENT)
 public class BrowseControllerTest
         extends MavenRestAssuredBaseTest
 {
@@ -74,7 +77,6 @@ public class BrowseControllerTest
     public void testGetStorages()
             throws Exception
     {
-
         String url = getContextBaseUrl() + BrowseController.ROOT_CONTEXT;
         
         String jsonResponse = given().accept(MediaType.APPLICATION_JSON_VALUE)
@@ -140,6 +142,7 @@ public class BrowseControllerTest
     public void testGetRepositoriesWithStorageNotFound()
     {
         String url = getContextBaseUrl() + BrowseController.ROOT_CONTEXT + "/storagefoo";
+
         given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .get(url)
@@ -165,8 +168,8 @@ public class BrowseControllerTest
                                        "3.2"
                          });
 
-        String url = getContextBaseUrl() + BrowseController.ROOT_CONTEXT + "/" + STORAGE0 + "/" + REPOSITORY
-                     + "/org/carlspring/strongbox/browsing/test-browsing/1.1";
+        String url = getContextBaseUrl() + BrowseController.ROOT_CONTEXT + "/" + STORAGE0 + "/" + REPOSITORY +
+                     "/org/carlspring/strongbox/browsing/test-browsing/1.1";
         
         String jsonResponse = given().accept(MediaType.APPLICATION_JSON_VALUE)
                                      .when()
@@ -195,6 +198,7 @@ public class BrowseControllerTest
     public void testRepositoryContentsWithRepositoryNotFound()
     {
         String url = getContextBaseUrl() + BrowseController.ROOT_CONTEXT + "/storage0/repofoo";
+
         given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .get(url)
@@ -214,6 +218,7 @@ public class BrowseControllerTest
     public void testRepositoryContentsWithPathNotFound()
     {
         String url = getContextBaseUrl() + BrowseController.ROOT_CONTEXT + "/storage0/releases/foo/bar";
+
         given().accept(MediaType.APPLICATION_JSON_VALUE)
                .when()
                .get(url)
