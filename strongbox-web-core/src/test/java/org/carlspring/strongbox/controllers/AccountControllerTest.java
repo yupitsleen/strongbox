@@ -6,6 +6,7 @@ import org.carlspring.strongbox.rest.common.RestAssuredBaseTest;
 import org.carlspring.strongbox.users.domain.User;
 import org.carlspring.strongbox.users.dto.UserDto;
 import org.carlspring.strongbox.users.service.UserService;
+import org.carlspring.strongbox.users.service.impl.XmlUserService.XmlUserServiceQualifier;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -13,12 +14,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.apache.http.HttpHeaders;
-import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
-import org.junit.runners.MethodSorters;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
@@ -36,6 +35,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Steve Todorov
+ * @author Pablo Tirado
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
@@ -48,6 +48,7 @@ public class AccountControllerTest
     private static final String TEST_DISABLED_USER_ACCOUNT = "test-disabled-user-account";
 
     @Inject
+    @XmlUserServiceQualifier
     private UserService userService;
     
     @Override
@@ -66,7 +67,7 @@ public class AccountControllerTest
         disabledUser.setUsername(TEST_DISABLED_USER_ACCOUNT);
         disabledUser.setPassword("1234");
         disabledUser.setEnabled(false);
-        userService.add(disabledUser);
+        userService.save(disabledUser);
     }
 
     @Test
@@ -103,7 +104,7 @@ public class AccountControllerTest
         UserDto testUser = new UserDto();
         testUser.setUsername("test-account-update");
         testUser.setPassword("password");
-        userService.add(testUser);
+        userService.save(testUser);
 
         User userEntity = userService.findByUserName(testUser.getUsername());
 
@@ -165,7 +166,7 @@ public class AccountControllerTest
         testUser.setRoles(null);
         testUser.setEnabled(true);
 
-        userService.add(testUser);
+        userService.save(testUser);
 
         // Tru to change roles
         UserForm userForm = new UserForm();

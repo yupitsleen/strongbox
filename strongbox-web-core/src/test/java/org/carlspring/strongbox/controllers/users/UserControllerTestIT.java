@@ -15,6 +15,7 @@ import org.carlspring.strongbox.users.domain.Roles;
 import org.carlspring.strongbox.users.domain.User;
 import org.carlspring.strongbox.users.dto.UserDto;
 import org.carlspring.strongbox.users.service.UserService;
+import org.carlspring.strongbox.users.service.impl.XmlUserService.XmlUserServiceQualifier;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -61,6 +62,7 @@ public class UserControllerTestIT
 {
 
     @Inject
+    @XmlUserServiceQualifier
     private UserService userService;
 
     @Inject
@@ -911,7 +913,7 @@ public class UserControllerTestIT
         dto.setEnabled(user.isEnabled());
         dto.setRoles(user.getRoles());
         dto.setAccessModel(
-                buildFromAccessModel(AccessModelToAccessModelOutputConverter.INSTANCE.convert(user.getAccessModel())));
+                buildFromAccessModel(AccessModelToAccessModelOutputConverter.INSTANCE.convert(user.getUserAccessModel())));
         dto.setSecurityTokenKey(user.getSecurityTokenKey());
 
         if (operation != null)
