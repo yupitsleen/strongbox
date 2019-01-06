@@ -1,48 +1,35 @@
 package org.carlspring.strongbox.controllers.configuration.security.authentication;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
-import static org.carlspring.strongbox.CustomMatchers.equalByToString;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.io.IOException;
-
-import javax.inject.Inject;
-
 import org.carlspring.strongbox.authentication.ConfigurableProviderManager;
 import org.carlspring.strongbox.authentication.api.AuthenticationItem;
 import org.carlspring.strongbox.authentication.api.AuthenticationItems;
-import org.carlspring.strongbox.authentication.registry.AuthenticationResourceManager;
-import org.carlspring.strongbox.config.HazelcastConfiguration;
-import org.carlspring.strongbox.config.HazelcastInstanceId;
 import org.carlspring.strongbox.config.IntegrationTest;
 import org.carlspring.strongbox.rest.common.RestAssuredBaseTest;
+
+import javax.inject.Inject;
+import java.io.IOException;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
+import static org.carlspring.strongbox.CustomMatchers.equalByToString;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * @author Przemyslaw Fusik
  * @author Pablo Tirado
  * @author sbespalov
  */
-@ActiveProfiles("AuthenticatorsConfigControllerTestConfig")
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
 public class AuthenticatorsConfigControllerTestIT
@@ -55,7 +42,7 @@ public class AuthenticatorsConfigControllerTestIT
     @Override
     @BeforeEach
     public void init()
-        throws Exception
+            throws Exception
     {
         super.init();
         setContextBaseUrl(getContextBaseUrl() + "/api/configuration");
@@ -63,7 +50,7 @@ public class AuthenticatorsConfigControllerTestIT
 
     @AfterEach
     public void afterEveryTest()
-        throws IOException
+            throws IOException
     {
         configurableProviderManager.reload();
 
@@ -115,7 +102,7 @@ public class AuthenticatorsConfigControllerTestIT
         given().header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                .when()
                .put(getContextBaseUrl()
-                       + "/authenticators/reorder/authenticationProviderFirst/authenticationProviderSecond")
+                    + "/authenticators/reorder/authenticationProviderFirst/authenticationProviderSecond")
                .peek()
                .then()
                .statusCode(HttpStatus.OK.value())
@@ -143,7 +130,7 @@ public class AuthenticatorsConfigControllerTestIT
         assertInitialAuthenticationItems();
 
         AuthenticationItem authenticationItem = new AuthenticationItem("authenticationProviderThird",
-                AuthenticationProvider.class.getSimpleName());
+                                                                       AuthenticationProvider.class.getSimpleName());
         authenticationItem.setEnabled(true);
         authenticationItem.setOrder(2);
 
@@ -171,54 +158,13 @@ public class AuthenticatorsConfigControllerTestIT
                .statusCode(HttpStatus.OK.value());
     }
 
-    @Profile("AuthenticatorsConfigControllerTestConfig")
-    @Import(HazelcastConfiguration.class)
-    @Configuration
-    public static class AuthenticatorsConfigControllerTestConfig
-    {
-
-        @Primary
-        @Bean
-        public HazelcastInstanceId hazelcastInstanceId() 
-        {
-            return new HazelcastInstanceId("AuthenticatorsConfigControllerTestConfig-hazelcast-instance");
-        }
-        
-        @Bean
-        @Primary
-        public AuthenticationResourceManager testAuthenticationResourceManager()
-        {
-            return new TestAuthenticationResourceManager();
-        }
-
-    }
-
-    private static class TestAuthenticationResourceManager extends AuthenticationResourceManager
-    {
-
-        @Override
-        public Resource getAuthenticationConfigurationResource()
-            throws IOException
-        {
-            return new DefaultResourceLoader().getResource("classpath:accit-authentication-providers.xml");
-        }
-
-        @Override
-        public Resource getAuthenticationPropertiesResource()
-            throws IOException
-        {
-            return new DefaultResourceLoader().getResource("classpath:accit-authentication-providers.yaml");
-        }
-
-    }
-
     static class TestAuthenticationProvider
             implements AuthenticationProvider
     {
 
         @Override
         public Authentication authenticate(Authentication authentication)
-            throws AuthenticationException
+                throws AuthenticationException
         {
             return authentication;
         }
