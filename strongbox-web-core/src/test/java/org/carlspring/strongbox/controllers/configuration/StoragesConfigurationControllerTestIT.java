@@ -386,7 +386,7 @@ public class StoragesConfigurationControllerTestIT
         addRepository(repositoryForm1, storageForm);
         addRepository(repositoryForm2, storageForm);
 
-        url = getContextBaseUrl() + "/api/configuration/strongbox/proxy-configuration";
+        url = "/api/configuration/strongbox/proxy-configuration";
 
         givenCustom().accept(MediaType.APPLICATION_JSON_VALUE)
                      .params("storageId", storageId,
