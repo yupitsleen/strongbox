@@ -386,18 +386,6 @@ public class StoragesConfigurationControllerTestIT
         addRepository(repositoryForm1, storageForm);
         addRepository(repositoryForm2, storageForm);
 
-        url = "/api/configuration/strongbox/proxy-configuration";
-
-        givenCustom().accept(MediaType.APPLICATION_JSON_VALUE)
-                     .params("storageId", storageId,
-                             "repositoryId", repositoryId1)
-                     .when()
-                     .get(url)
-                     .peek() // Use peek() to print the output
-                     .then()
-                     .statusCode(HttpStatus.OK.value())
-                     .extract();
-
         Storage storage = getStorage(storageId);
 
         assertNotNull(storage, "Failed to get storage (" + storageId + ")!");
