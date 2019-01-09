@@ -176,9 +176,9 @@ public class MavenTestCaseWithArtifactGeneration
                 {
                     repositoryPath = RepositoryFiles.trash(repositoryPath);
                 }
-                
-                RepositoryPath finalRepositoryPath = repositoryPath;
+
                 OutputStream outputStream = hostedRepositoryProvider.getOutputStream(repositoryPath);
+                RepositoryPath finalRepositoryPath = repositoryPath;
                 outputStream = new FilterOutputStream(outputStream) {
 
                     @Override
@@ -186,7 +186,10 @@ public class MavenTestCaseWithArtifactGeneration
                         throws IOException
                     {
                         super.close();
-                        artifactEventListenerRegistry.dispatchArtifactStoredEvent(finalRepositoryPath);
+                        synchronized (finalRepositoryPath)
+                        {
+                            artifactEventListenerRegistry.dispatchArtifactStoredEvent(finalRepositoryPath);
+                        }
                     }
                     
                 };
