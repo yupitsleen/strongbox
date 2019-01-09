@@ -32,6 +32,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.context.WebApplicationContext;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.mockito.ArgumentMatchers.any;
 
 
@@ -54,7 +55,7 @@ import static org.mockito.ArgumentMatchers.any;
 @ContextConfiguration(locations = "classpath:/ldapServerApplicationContext.xml")
 @TestPropertySource(locations = "classpath:/org/carlspring/strongbox/authentication/api/impl/ldap/lapt.properties")
 @TestExecutionListeners(listeners = { CacheManagerTestExecutionListener.class }, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-@Execution(ExecutionMode.SAME_THREAD)
+@Execution(CONCURRENT)
 public @interface IntegrationTest
 {
 

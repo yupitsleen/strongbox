@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
-@Execution(CONCURRENT)
 public class UserFormTestIT
         extends RestAssuredBaseTest
 {

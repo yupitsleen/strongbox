@@ -26,14 +26,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.aristar.jnuget.rss.PackageFeed;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * @author Sergey Bespalov
@@ -41,7 +39,6 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
  */
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
-@Execution(CONCURRENT)
 public class NugetArtifactControllerTest extends NugetRestAssuredBaseTest
 {
 
@@ -431,7 +428,7 @@ public class NugetArtifactControllerTest extends NugetRestAssuredBaseTest
                    .then()
                    .statusCode(HttpStatus.OK.value())
                    .assertThat()
-                   .header("Content-Length", equalTo(String.valueOf(1490223)));
+                   .header("Content-Length", equalTo(String.valueOf(1499857)));
         }
         finally
         {
