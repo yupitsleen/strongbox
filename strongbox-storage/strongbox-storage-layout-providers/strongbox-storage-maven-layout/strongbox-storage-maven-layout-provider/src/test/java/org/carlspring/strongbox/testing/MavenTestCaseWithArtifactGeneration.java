@@ -186,7 +186,7 @@ public class MavenTestCaseWithArtifactGeneration
                         throws IOException
                     {
                         super.close();
-                        synchronized (finalRepositoryPath)
+                        synchronized (finalRepositoryPath.relativize().toString())
                         {
                             artifactEventListenerRegistry.dispatchArtifactStoredEvent(finalRepositoryPath);
                         }
