@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 @IntegrationTest
 @ExtendWith(SpringExtension.class)
 @Execution(SAME_THREAD)
+@Disabled // TODO: @fuss86: Until https://github.com/strongbox/strongbox/pull/978 is fixed.
 public class AuthenticatorsConfigControllerTestIT
         extends RestAssuredBaseTest
 {
