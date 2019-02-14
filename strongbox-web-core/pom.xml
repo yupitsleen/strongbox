@@ -970,7 +970,7 @@
                                     <value>${dir.strongbox.home}/etc/logback-debug.xml</value>
                                 </systemProperty>
                                 <systemProperty>
-                                    <name>logback.configurationFile</name>
+                                    <name>logging.config</name>
                                     <value>${dir.strongbox.home}/etc/logback-debug.xml</value>
                                 </systemProperty>
                                 <systemProperty>
