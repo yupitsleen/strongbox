@@ -6,11 +6,10 @@ import org.carlspring.strongbox.rest.common.MavenRestAssuredBaseTest;
 import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -19,7 +18,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
  * @author Steve Todorov
  */
 @IntegrationTest
-@ExtendWith(SpringExtension.class)
+@SpringBootTest
 public class PingControllerTest
         extends MavenRestAssuredBaseTest
 {
