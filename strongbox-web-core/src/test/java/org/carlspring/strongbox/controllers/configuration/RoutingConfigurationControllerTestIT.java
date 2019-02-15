@@ -23,7 +23,6 @@ import static org.hamcrest.CoreMatchers.containsString;
  * @author Pablo Tirado
  */
 @IntegrationTest
-@SpringBootTest
 public class RoutingConfigurationControllerTestIT
         extends RestAssuredBaseTest
 {

@@ -30,7 +30,6 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * @author Pablo Tirado
  */
 @IntegrationTest
-@SpringBootTest
 public class ServerConfigurationControllerTestIT
         extends RestAssuredBaseTest
 {

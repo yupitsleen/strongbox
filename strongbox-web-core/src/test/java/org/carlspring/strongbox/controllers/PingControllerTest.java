@@ -18,7 +18,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
  * @author Steve Todorov
  */
 @IntegrationTest
-@SpringBootTest
 public class PingControllerTest
         extends MavenRestAssuredBaseTest
 {
